@@ -35,10 +35,14 @@ function map(array, fn) {
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
 function reduce(array, fn, initial) {
-    let prev = isNaN(initial) ? array[0] : initial;
+    let prev = initial;
 
     for (let i = 0; i < array.length; i++) {
-        prev = fn(prev, array[i], i, array);
+        if (initial === undefined && i === 0) {
+            prev = array[i];
+        } else {
+            prev = fn(prev, array[i], i, array);
+        }
     }
 
     return prev;
