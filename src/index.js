@@ -122,7 +122,7 @@ function calculator(number = 0) {
     }
 
     let obj = {
-        sum: () => {
+        sum: function() {
             let sum = number;
 
             for (let i = 0; i < arguments.length; i++) {
@@ -131,7 +131,7 @@ function calculator(number = 0) {
 
             return sum;
         },
-        dif: () => {
+        dif: function() {
             let dif = number;
 
             for (let i = 0; i < arguments.length; i++) {
@@ -140,7 +140,7 @@ function calculator(number = 0) {
 
             return dif;
         },
-        div: () => {
+        div: function() {
             let div = number;
 
             for (let i = 0; i < arguments.length; i++) {
@@ -152,7 +152,7 @@ function calculator(number = 0) {
 
             return div;
         },
-        mul: () => {
+        mul: function() {
             let mul = number;
 
             for (let i = 0; i < arguments.length; i++) {
