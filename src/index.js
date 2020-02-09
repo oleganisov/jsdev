@@ -84,7 +84,7 @@ function findAllPSiblings(where) {
 function findError(where) {
     var result = [];
 
-    for (var child of where.childNodes) {
+    for (var child of where.children) {
         result.push(child.innerText);
     }
 
