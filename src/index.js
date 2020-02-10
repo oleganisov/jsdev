@@ -224,8 +224,7 @@ function observeChildNodes(where, fn) {
     const result = { type: '', nodes: [] };
     const config = {
         childList: true,
-        subtree: true,
-        characterDataOldValue: true
+        subtree: true
     };
 
     let observer = new MutationObserver(mutations => {
@@ -234,13 +233,14 @@ function observeChildNodes(where, fn) {
                 if (mutation.removedNodes.length) {
                     result.type = 'remove';
                     for (let node of mutation.removedNodes) {
-                        result.nodes.push(node.tagName.toLowerCase());
+                        result.nodes.push(node);
                     }
+
                     fn(result);
                 } else if (mutation.addedNodes.length) {
                     result.type = 'insert';
                     for (let node of mutation.addedNodes) {
-                        result.nodes.push(node.tagName.toLowerCase());
+                        result.nodes.push(node);
                     }
                     fn(result);
                 }
@@ -249,7 +249,6 @@ function observeChildNodes(where, fn) {
     });
 
     observer.observe(where, config);
-    // console.log(result);
 }
 
 export {
