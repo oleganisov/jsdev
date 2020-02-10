@@ -105,8 +105,8 @@ function findError(where) {
  */
 function deleteTextNodes(where) {
     for (let elem of where.childNodes) {
-        // elem.textContent = '';
         if (elem.nodeName == '#text') {
+            // elem.textContent = '';
             elem.parentNode.removeChild(elem);
         }
     }
@@ -126,7 +126,8 @@ function deleteTextNodes(where) {
 function deleteTextNodesRecursive(where) {
     for (let elem of where.childNodes) {
         if (elem.nodeName == '#text') {
-            elem.parentNode.removeChild(elem);
+            // elem.parentNode.removeChild(elem);
+            elem.textContent = '';
         }
         if (elem.childNodes.length) {
             deleteTextNodesRecursive(elem);
