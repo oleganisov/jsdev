@@ -220,7 +220,37 @@ function collectDOMStat(root) {
      nodes: [div]
    }
  */
-function observeChildNodes(where, fn) {}
+function observeChildNodes(where, fn) {
+    const result = { type: '', nodes: [] };
+    const config = {
+        childList: true,
+        subtree: true,
+        characterDataOldValue: true
+    };
+
+    let observer = new MutationObserver(mutations => {
+        for (let mutation of mutations) {
+            if (mutation.type === 'childList') {
+                if (mutation.removedNodes.length) {
+                    result.type = 'remove';
+                    for (let node of mutation.removedNodes) {
+                        result.nodes.push(node.tagName.toLowerCase());
+                    }
+                    fn(result);
+                } else if (mutation.addedNodes.length) {
+                    result.type = 'insert';
+                    for (let node of mutation.addedNodes) {
+                        result.nodes.push(node.tagName.toLowerCase());
+                    }
+                    fn(result);
+                }
+            }
+        }
+    });
+
+    observer.observe(where, config);
+    // console.log(result);
+}
 
 export {
     createDivWithText,
