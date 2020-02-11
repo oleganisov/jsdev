@@ -30,10 +30,11 @@ function createDiv() {
     const div = document.createElement('div');
 
     div.classList.add('draggable-div');
+    div.setAttribute('draggable', 'true');
     div.style.backgroundColor =
         '#' + Math.floor(Math.random() * 16777215).toString(16);
     div.style.height = Math.floor(Math.random() * 100) + 'px';
-    div.style.width = Math.floor(Math.random() * 100) + 'px';
+    div.style.width = Math.floor(Math.random() * 500) + 'px';
     div.style.top = Math.floor(Math.random() * 100) + 'px';
     div.style.left = Math.floor(Math.random() * 100) + 'px';
 
@@ -48,36 +49,46 @@ function createDiv() {
    homeworkContainer.appendChild(newDiv);
    addListeners(newDiv);
  */
+let dragSrcEl = null;
+
 function addListeners(target) {
     let handlerDragStart = e => {
-        if (e.target instanceof HTMLLIElement) {
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('Text', e.target.getAttribute('id'));
-        }
+        dragSrcEl = e.target;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', e.target.innerHTML);
+        console.log(e.dataTransfer);
 
         return true;
     };
     let handlerDragEnter = e => {
         e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
 
         return true;
     };
     let handlerDragOver = e => {
         e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+
+        return false;
     };
     let handlerDrop = e => {
-        let data = e.dataTransfer.getData('Text');
-
-        e.target.appendChild(document.getElementById(data));
+        // console.log('target', e.target, e);
+        // console.log('dragSrc', dragSrcEl);
         e.stopPropagation();
+        if (dragSrcEl != e.target) {
+            dragSrcEl.innerHTML = e.target.innerHTML;
+            e.target.innerHTML = e.dataTransfer.getData('text/html');
+            console.log(e.dataTransfer);
+        }
 
         return false;
     };
 
-    target.addEventListener('dragstart', handlerDragStart());
-    target.addEventListener('dragenter', handlerDragEnter());
-    target.addEventListener('dragover', handlerDragOver());
-    target.addEventListener('drop', handlerDrop());
+    target.addEventListener('dragstart', handlerDragStart, false);
+    target.addEventListener('dragenter', handlerDragEnter, false);
+    target.addEventListener('dragover', handlerDragOver, false);
+    target.addEventListener('drop', handlerDrop, false);
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
