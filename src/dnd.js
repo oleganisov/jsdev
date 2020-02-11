@@ -49,27 +49,35 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
-    target.addEventListener('dragstart', e => {
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('Text', e.target.getAttribute('id'));
-        e.dataTransfer.setDragImage(e.target, 100, 100);
+    let handlerDragStart = e => {
+        if (e.target instanceof HTMLLIElement) {
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('Text', e.target.getAttribute('id'));
+        }
 
         return true;
-    });
-    target.parentNode.addEventListener('dragenter', e => {
+    };
+    let handlerDragEnter = e => {
         e.preventDefault();
 
         return true;
-    });
-    target.parentNode.addEventListener('dragover', e => e.preventDefault());
-    target.parentNode.addEventListener('drop', e => {
+    };
+    let handlerDragOver = e => {
+        e.preventDefault();
+    };
+    let handlerDrop = e => {
         let data = e.dataTransfer.getData('Text');
 
         e.target.appendChild(document.getElementById(data));
         e.stopPropagation();
 
         return false;
-    });
+    };
+
+    target.addEventListener('dragstart', handlerDragStart());
+    target.addEventListener('dragenter', handlerDragEnter());
+    target.addEventListener('dragover', handlerDragOver());
+    target.addEventListener('drop', handlerDrop());
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
