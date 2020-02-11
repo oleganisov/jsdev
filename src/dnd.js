@@ -27,6 +27,17 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
+    const div = document.createElement('div');
+
+    div.classList.add('draggable-div');
+    div.style.backgroundColor =
+        '#' + Math.floor(Math.random() * 16777215).toString(16);
+    div.style.height = Math.floor(Math.random() * 100) + 'px';
+    div.style.width = Math.floor(Math.random() * 100) + 'px';
+    div.style.top = Math.floor(Math.random() * 100) + 'px';
+    div.style.left = Math.floor(Math.random() * 100) + 'px';
+
+    return div;
 }
 
 /*
@@ -38,6 +49,7 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
+  target.addEventListener
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
@@ -54,6 +66,4 @@ addDivButton.addEventListener('click', function() {
     // или использовать HTML5 D&D - https://www.html5rocks.com/ru/tutorials/dnd/basics/
 });
 
-export {
-    createDiv
-};
+export { createDiv };
