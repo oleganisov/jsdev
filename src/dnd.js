@@ -49,7 +49,27 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
-  target.addEventListener
+    target.addEventListener('dragstart', e => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('Text', e.target.getAttribute('id'));
+        e.dataTransfer.setDragImage(e.target, 100, 100);
+
+        return true;
+    });
+    target.parentNode.addEventListener('dragenter', e => {
+        e.preventDefault();
+
+        return true;
+    });
+    target.parentNode.addEventListener('dragover', e => e.preventDefault());
+    target.parentNode.addEventListener('drop', e => {
+        let data = e.dataTransfer.getData('Text');
+
+        e.target.appendChild(document.getElementById(data));
+        e.stopPropagation();
+
+        return false;
+    });
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
