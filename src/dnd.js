@@ -41,7 +41,7 @@ function createDiv() {
     div.style.width = Math.floor(Math.random() * 300) + 'px';
     div.style.top = Math.floor(Math.random() * 100) + 'px';
     div.style.left = Math.floor(Math.random() * 500) + 'px';
-    div.style.position = 'relative';
+    div.style.position = 'absolute';
 
     return div;
 }
