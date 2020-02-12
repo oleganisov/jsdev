@@ -54,50 +54,41 @@ function createDiv() {
    homeworkContainer.appendChild(newDiv);
    addListeners(newDiv);
  */
-let dragSrcEl = null;
-let dragSrcElStyle = {};
 
 function addListeners(target) {
     let handlerDragStart = e => {
         e.target.style.opacity = '0.4';
-        dragSrcEl = e.target;
-        dragSrcElStyle = { ...dragSrcEl.style };
         e.dataTransfer.effectAllowed = 'move';
-        // e.dataTransfer.setData('text', e.target.innerHTML);
+        e.dataTransfer.setData('text', e.target.id);
     };
     let handlerDragOver = e => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
     };
     let handlerDragEnter = e => {
-        e.target.style.border = '2px dashed black';
-    };
-    let handlerDragLeave = e => {
-        e.target.style.border = '2px solid black';
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
     };
     let handlerDragEnd = e => {
+        e.preventDefault();
         e.target.style.opacity = 1;
     };
     let handlerDrop = e => {
-        e.stopPropagation();
-        e.target.style.border = '2px solid black';
-        if (dragSrcEl != e.target) {
-            dragSrcEl.style.width = e.target.style.width;
-            dragSrcEl.style.height = e.target.style.height;
-            dragSrcEl.style.backgroundColor = e.target.style.backgroundColor;
-            e.target.style.width = dragSrcElStyle.width;
-            e.target.style.height = dragSrcElStyle.height;
-            e.target.style.backgroundColor = dragSrcElStyle.backgroundColor;
-            // e.target.innerHTML = e.dataTransfer.getData('text/html');
-        }
+        let srcElemId = e.dataTransfer.getData('text');
+        let srcElem = document.querySelector('#' + srcElemId);
+
+        srcElem.style.left = e.clientX + 'px';
+        srcElem.style.top = e.clientY + 'px';
+        e.dataTransfer.clearData();
     };
 
     target.addEventListener('dragstart', handlerDragStart, false);
-    target.addEventListener('dragenter', handlerDragEnter, false);
-    target.addEventListener('dragover', handlerDragOver, false);
-    target.addEventListener('dragleave', handlerDragLeave, false);
     target.addEventListener('dragend', handlerDragEnd, false);
-    target.addEventListener('drop', handlerDrop, false);
+
+    target.parentNode.addEventListener('dragenter', handlerDragEnter, false);
+    target.parentNode.addEventListener('dragover', handlerDragOver, false);
+    target.parentNode.addEventListener('drop', handlerDrop, false);
+    target.parentNode.style.height = '100vh';
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
