@@ -31,12 +31,17 @@ function createDiv() {
 
     div.classList.add('draggable-div');
     div.setAttribute('draggable', 'true');
+    let divId = 'div' + Math.floor(Math.random() * 100);
+
+    div.setAttribute('id', divId);
+    div.style.border = '2px solid black';
     div.style.backgroundColor =
         '#' + Math.floor(Math.random() * 16777215).toString(16);
-    div.style.height = Math.floor(Math.random() * 100) + 'px';
-    div.style.width = Math.floor(Math.random() * 500) + 'px';
+    div.style.height = Math.floor(Math.random() * 300) + 'px';
+    div.style.width = Math.floor(Math.random() * 300) + 'px';
     div.style.top = Math.floor(Math.random() * 100) + 'px';
-    div.style.left = Math.floor(Math.random() * 100) + 'px';
+    div.style.left = Math.floor(Math.random() * 500) + 'px';
+    div.style.position = 'relative';
 
     return div;
 }
@@ -50,44 +55,48 @@ function createDiv() {
    addListeners(newDiv);
  */
 let dragSrcEl = null;
+let dragSrcElStyle = {};
 
 function addListeners(target) {
     let handlerDragStart = e => {
+        e.target.style.opacity = '0.4';
         dragSrcEl = e.target;
+        dragSrcElStyle = { ...dragSrcEl.style };
         e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/html', e.target.innerHTML);
-        console.log(e.dataTransfer);
-
-        return true;
-    };
-    let handlerDragEnter = e => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-
-        return true;
+        // e.dataTransfer.setData('text', e.target.innerHTML);
     };
     let handlerDragOver = e => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
-
-        return false;
+    };
+    let handlerDragEnter = e => {
+        e.target.style.border = '2px dashed black';
+    };
+    let handlerDragLeave = e => {
+        e.target.style.border = '2px solid black';
+    };
+    let handlerDragEnd = e => {
+        e.target.style.opacity = 1;
     };
     let handlerDrop = e => {
-        // console.log('target', e.target, e);
-        // console.log('dragSrc', dragSrcEl);
         e.stopPropagation();
+        e.target.style.border = '2px solid black';
         if (dragSrcEl != e.target) {
-            dragSrcEl.innerHTML = e.target.innerHTML;
-            e.target.innerHTML = e.dataTransfer.getData('text/html');
-            console.log(e.dataTransfer);
+            dragSrcEl.style.width = e.target.style.width;
+            dragSrcEl.style.height = e.target.style.height;
+            dragSrcEl.style.backgroundColor = e.target.style.backgroundColor;
+            e.target.style.width = dragSrcElStyle.width;
+            e.target.style.height = dragSrcElStyle.height;
+            e.target.style.backgroundColor = dragSrcElStyle.backgroundColor;
+            // e.target.innerHTML = e.dataTransfer.getData('text/html');
         }
-
-        return false;
     };
 
     target.addEventListener('dragstart', handlerDragStart, false);
     target.addEventListener('dragenter', handlerDragEnter, false);
     target.addEventListener('dragover', handlerDragOver, false);
+    target.addEventListener('dragleave', handlerDragLeave, false);
+    target.addEventListener('dragend', handlerDragEnd, false);
     target.addEventListener('drop', handlerDrop, false);
 }
 
