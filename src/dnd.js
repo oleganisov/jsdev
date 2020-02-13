@@ -78,6 +78,7 @@ function addListeners(target) {
         e.target.style.opacity = 1;
     };
     let handlerDrop = e => {
+        e.preventDefault();
         let srcElemId = e.dataTransfer.getData('text');
         let srcElem = document.querySelector('#' + srcElemId);
         let coordX = -e.dataTransfer.getData('shiftX') + e.clientX;
