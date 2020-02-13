@@ -57,9 +57,13 @@ function createDiv() {
 
 function addListeners(target) {
     let handlerDragStart = e => {
+        let box = target.getBoundingClientRect();
+
         e.target.style.opacity = '0.4';
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text', e.target.id);
+        e.dataTransfer.setData('shiftX', e.clientX - box.x);
+        e.dataTransfer.setData('shifty', e.clientY - box.y);
     };
     let handlerDragOver = e => {
         e.preventDefault();
@@ -76,9 +80,11 @@ function addListeners(target) {
     let handlerDrop = e => {
         let srcElemId = e.dataTransfer.getData('text');
         let srcElem = document.querySelector('#' + srcElemId);
+        let coordX = -e.dataTransfer.getData('shiftX') + e.clientX;
+        let coordY = -e.dataTransfer.getData('shiftY') + e.clientY;
 
-        srcElem.style.left = e.clientX + 'px';
-        srcElem.style.top = e.clientY + 'px';
+        srcElem.style.left = coordX + 'px';
+        srcElem.style.top = coordY + 'px';
         e.dataTransfer.clearData();
     };
 
