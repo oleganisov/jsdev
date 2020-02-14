@@ -91,11 +91,17 @@ function addListeners(target) {
 
     target.addEventListener('dragstart', handlerDragStart, false);
     target.addEventListener('dragend', handlerDragEnd, false);
-
-    target.parentNode.addEventListener('dragenter', handlerDragEnter, false);
-    target.parentNode.addEventListener('dragover', handlerDragOver, false);
-    target.parentNode.addEventListener('drop', handlerDrop, false);
-    target.parentNode.style.height = '100vh';
+    if (!target.parentNode.getAttribute('listener')) {
+        target.parentNode.addEventListener(
+            'dragenter',
+            handlerDragEnter,
+            false
+        );
+        target.parentNode.addEventListener('dragover', handlerDragOver, false);
+        target.parentNode.addEventListener('drop', handlerDrop, false);
+        target.parentNode.style.height = '100vh';
+        target.parentNode.setAttribute('listener', 'true');
+    }
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
