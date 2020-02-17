@@ -91,6 +91,10 @@ function loadTowns() {
 function isMatching(full, chunk) {
     let cmpResult = full.toLowerCase().includes(chunk.toLowerCase());
 
+    if (!chunk) {
+        cmpResult = false;
+    }
+
     return cmpResult;
 }
 
@@ -103,12 +107,11 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-let resolvedPromise = loadTowns();
+let resolvedPromise;
 
-// window.addEventListener('load', () => {
-//     resolvedPromise = loadTowns();
-//     console.log(promise);
-// });
+window.addEventListener('load', () => {
+    resolvedPromise = loadTowns();
+});
 
 filterInput.addEventListener('keyup', function(e) {
     resolvedPromise
@@ -119,18 +122,20 @@ filterInput.addEventListener('keyup', function(e) {
 
             return newArray;
         })
-        .then(val => console.log(val));
+        .then(filteredTowns => {
+            const fragment = document.createDocumentFragment();
 
-    // const towns = loadTowns();
-    // const fragment = document.createDocumentFragment();
-    // const list = document.createElement('ul');
-    // for (let town of towns) {
-    //     const li = document.createElement('li');
-    //     li.innerText = town.name;
-    //     fragment.appendChild(li);
-    // }
-    // list.appendChild(fragment);
-    // filterResult.appendChild(list);
+            filterResult.innerHTML = '';
+
+            for (let town of filteredTowns) {
+                const div = document.createElement('div');
+
+                div.innerText = town.name;
+                fragment.appendChild(div);
+            }
+            filterResult.appendChild(fragment);
+        });
+
     // это обработчик нажатия кливиш в текстовом поле
 });
 
