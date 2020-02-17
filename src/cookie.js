@@ -43,10 +43,32 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-filterNameInput.addEventListener('keyup', function() {
+filterNameInput.addEventListener('keyup', function(e) {
+    console.log(e.target.value);
     // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
 });
 
 addButton.addEventListener('click', () => {
+    document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+    const tr = document.createElement('tr');
+    const tdName = document.createElement('td');
+    const tdValue = document.createElement('td');
+    const tdDel = document.createElement('button');
+
+    tdName.innerText = addNameInput.value;
+    tdValue.innerText = addValueInput.value;
+    tdDel.innerText = 'Удалить';
+    tdDel.dataset.cookie = addNameInput.value;
+    tdDel.addEventListener('click', e => {
+        const currentRow = e.target.closest('tr');
+
+        listTable.removeChild(currentRow);
+    });
+
+    tr.appendChild(tdName);
+    tr.appendChild(tdValue);
+    tr.appendChild(tdDel);
+    listTable.appendChild(tr);
+
     // здесь можно обработать нажатие на кнопку "добавить cookie"
 });
