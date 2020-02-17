@@ -39,12 +39,42 @@ const homeworkContainer = document.querySelector('#homework-container');
 function loadTowns() {
     let url =
         'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
+    let resultPromise = fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                return Promise.reject('Не удалось загрузить города');
+            }
 
-    let towns = fetch(url)
-        .then(response => response.json())
-        .then(json => json.sort((a, b) => (a.name > b.name ? 1 : -1)));
+            return response.json();
+        })
+        .then(json => {
+            const towns = json.sort((a, b) => (a.name > b.name ? 1 : -1));
 
-    return towns;
+            loadingBlock.style.display = 'none';
+            filterBlock.style.display = 'block';
+
+            return towns;
+        })
+        .catch(error => {
+            if (!document.querySelector('#btn-refetch')) {
+                let divError = document.createElement('div'),
+                    btnRefetch = document.createElement('button');
+
+                divError.innerText = error;
+                divError.id = 'error-block';
+                btnRefetch.innerText = 'Повторить';
+                btnRefetch.id = 'btn-refetch';
+                btnRefetch.addEventListener('click', () => {
+                    loadTowns();
+                });
+
+                homeworkContainer.appendChild(divError);
+                homeworkContainer.appendChild(btnRefetch);
+                loadingBlock.style.display = 'none';
+            }
+        });
+
+    return resultPromise;
 }
 
 /*
@@ -73,21 +103,34 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-filterInput.addEventListener('keyup', function() {
-    const towns = loadTowns();
+let resolvedPromise = loadTowns();
 
-    const fragment = document.createDocumentFragment();
-    const list = document.createElement('ul');
+// window.addEventListener('load', () => {
+//     resolvedPromise = loadTowns();
+//     console.log(promise);
+// });
 
-    for (let town of towns) {
-        const li = document.createElement('li');
+filterInput.addEventListener('keyup', function(e) {
+    resolvedPromise
+        .then(array => {
+            let newArray = array.filter(item =>
+                isMatching(item.name, e.target.value)
+            );
 
-        li.innerText = town.name;
-        fragment.appendChild(li);
-    }
-    list.appendChild(fragment);
-    filterResult.appendChild(list);
+            return newArray;
+        })
+        .then(val => console.log(val));
 
+    // const towns = loadTowns();
+    // const fragment = document.createDocumentFragment();
+    // const list = document.createElement('ul');
+    // for (let town of towns) {
+    //     const li = document.createElement('li');
+    //     li.innerText = town.name;
+    //     fragment.appendChild(li);
+    // }
+    // list.appendChild(fragment);
+    // filterResult.appendChild(list);
     // это обработчик нажатия кливиш в текстовом поле
 });
 
