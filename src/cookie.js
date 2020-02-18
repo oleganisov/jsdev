@@ -73,6 +73,13 @@ function fillTable() {
     const cookies = getCookies();
 
     listTable.innerHTML = '';
+    let removeCookie = e => {
+        const currentRow = e.target.closest('tr');
+        const removedCookie = e.target.dataset.cookie;
+
+        listTable.removeChild(currentRow);
+        document.cookie = `${removedCookie}=; max-age=-1`;
+    };
 
     for (let cookie in cookies) {
         if (Object.hasOwnProperty.call(cookies, cookie)) {
@@ -86,9 +93,7 @@ function fillTable() {
             tdDel.innerText = 'Удалить';
             tdDel.dataset.cookie = cookie;
             tdDel.addEventListener('click', e => {
-                const currentRow = e.target.closest('tr');
-
-                listTable.removeChild(currentRow);
+                removeCookie(e);
             });
 
             tr.appendChild(tdName);
