@@ -44,14 +44,13 @@ const addButton = homeworkContainer.querySelector('#add-button');
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('keyup', function(e) {
-    console.log(e.target.value);
+    fillTable(e.target.value);
     // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
 });
 
 addButton.addEventListener('click', () => {
     document.cookie = `${addNameInput.value}=${addValueInput.value}`;
-    fillTable();
-
+    fillTable(filterNameInput.value);
     // здесь можно обработать нажатие на кнопку "добавить cookie"
 });
 
@@ -69,7 +68,7 @@ function getCookies() {
     return cookies;
 }
 
-function fillTable() {
+function fillTable(filter = '') {
     const cookies = getCookies();
 
     listTable.innerHTML = '';
@@ -82,7 +81,11 @@ function fillTable() {
     };
 
     for (let cookie in cookies) {
-        if (Object.hasOwnProperty.call(cookies, cookie)) {
+        if (
+            Object.hasOwnProperty.call(cookies, cookie) &&
+            (cookie.toLowerCase().includes(filter.toLowerCase()) ||
+                cookies[cookie].toLowerCase().includes(filter.toLowerCase()))
+        ) {
             const tr = document.createElement('tr');
             const tdName = document.createElement('td');
             const tdValue = document.createElement('td');
