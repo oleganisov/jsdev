@@ -50,25 +50,53 @@ filterNameInput.addEventListener('keyup', function(e) {
 
 addButton.addEventListener('click', () => {
     document.cookie = `${addNameInput.value}=${addValueInput.value}`;
-    const tr = document.createElement('tr');
-    const tdName = document.createElement('td');
-    const tdValue = document.createElement('td');
-    const tdDel = document.createElement('button');
-
-    tdName.innerText = addNameInput.value;
-    tdValue.innerText = addValueInput.value;
-    tdDel.innerText = 'Удалить';
-    tdDel.dataset.cookie = addNameInput.value;
-    tdDel.addEventListener('click', e => {
-        const currentRow = e.target.closest('tr');
-
-        listTable.removeChild(currentRow);
-    });
-
-    tr.appendChild(tdName);
-    tr.appendChild(tdValue);
-    tr.appendChild(tdDel);
-    listTable.appendChild(tr);
+    fillTable();
 
     // здесь можно обработать нажатие на кнопку "добавить cookie"
 });
+
+function getCookies() {
+    let cookies = [];
+
+    cookies = document.cookie.split('; ').reduce((prev, current) => {
+        const [name, value] = current.split('=');
+
+        prev[name] = value;
+
+        return prev;
+    }, {});
+
+    return cookies;
+}
+
+function fillTable() {
+    const cookies = getCookies();
+
+    listTable.innerHTML = '';
+
+    for (let cookie in cookies) {
+        if (Object.hasOwnProperty.call(cookies, cookie)) {
+            const tr = document.createElement('tr');
+            const tdName = document.createElement('td');
+            const tdValue = document.createElement('td');
+            const tdDel = document.createElement('button');
+
+            tdName.innerText = cookie;
+            tdValue.innerText = cookies[cookie];
+            tdDel.innerText = 'Удалить';
+            tdDel.dataset.cookie = cookie;
+            tdDel.addEventListener('click', e => {
+                const currentRow = e.target.closest('tr');
+
+                listTable.removeChild(currentRow);
+            });
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdValue);
+            tr.appendChild(tdDel);
+            listTable.appendChild(tr);
+        }
+    }
+}
+
+fillTable();
