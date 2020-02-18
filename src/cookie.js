@@ -107,4 +107,6 @@ function fillTable(filter = '') {
     }
 }
 
-fillTable();
+window.addEventListener('load', () => {
+    fillTable();
+});
